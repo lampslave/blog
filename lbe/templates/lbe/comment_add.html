@@ -1,0 +1,9 @@
+{% extends 'lbe/base.html' %}
+
+{% block form_media %}
+	{{ form.media.js }}
+{% endblock %}
+
+{% block content %}
+	{% include 'lbe/comment_form.html' %}
+{% endblock %}

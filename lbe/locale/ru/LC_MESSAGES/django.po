@@ -1,0 +1,234 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-01-05 00:05+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: forms.py:17
+msgid "for gravatar service only"
+msgstr "для сервиса gravatar"
+
+#: models.py:15
+msgid "setting name"
+msgstr "название"
+
+#: models.py:16
+msgid "setting value"
+msgstr "значение"
+
+#: models.py:17
+msgid "setting description"
+msgstr "описание"
+
+#: models.py:18
+msgid "autoload as template variable"
+msgstr "автозагрузка в шаблон"
+
+#: models.py:21
+msgid "setting"
+msgstr "настройка"
+
+#: models.py:22
+msgid "settings"
+msgstr "настройки"
+
+#: models.py:31
+msgid "Invalid name (a-z and _ only)"
+msgstr "Используйте только латинские буквы и подчёркивание"
+
+#: models.py:35
+msgid "category name"
+msgstr "название"
+
+#: models.py:36
+msgid "category slug"
+msgstr "псевдоним"
+
+#: models.py:37
+msgid "category description"
+msgstr "описание"
+
+#: models.py:40
+msgid "category"
+msgstr "рубрика"
+
+#: models.py:41
+msgid "categories"
+msgstr "рубрики"
+
+#: models.py:51
+msgid "article title"
+msgstr "название"
+
+#: models.py:52
+msgid "article content"
+msgstr "контент"
+
+#: models.py:53
+msgid "article created"
+msgstr "запись создана"
+
+#: models.py:54
+msgid "article updated"
+msgstr "запись обновлена"
+
+#: models.py:55
+msgid "related category"
+msgstr "рубрика"
+
+#: models.py:56
+msgid "article slug"
+msgstr "псевдоним"
+
+#: models.py:57
+msgid "article description"
+msgstr "описание"
+
+#: models.py:58
+msgid "comment allowed"
+msgstr "комментирование разрешено"
+
+#: models.py:59
+msgid "standalone page"
+msgstr "независимая страница"
+
+#: models.py:60
+msgid "article published"
+msgstr "запись опубликована"
+
+#: models.py:64
+msgid "article"
+msgstr "запись"
+
+#: models.py:65
+msgid "articles"
+msgstr "записи"
+
+#: models.py:83
+msgid "snippet"
+msgstr "фрагмент"
+
+#: models.py:86
+msgid "spam snippet"
+msgstr "фрагмент"
+
+#: models.py:87
+msgid "spam snippets"
+msgstr "чёрный список"
+
+#: models.py:91
+msgid "related article"
+msgstr "связанная запись"
+
+#: models.py:92
+msgid "parent comment"
+msgstr "родительский комментарий"
+
+#: models.py:93
+msgid "name"
+msgstr "имя"
+
+#: models.py:95
+msgid "website"
+msgstr "сайт"
+
+#: models.py:96 models.py:101
+msgid "comment"
+msgstr "комментарий"
+
+#: models.py:97
+msgid "comment created"
+msgstr "комментарий создан"
+
+#: models.py:98
+msgid "comment approved"
+msgstr "комментарий одобрен"
+
+#: models.py:102 views.py:182 templates/lbe/article_detail.html:17
+msgid "comments"
+msgstr "комментарии"
+
+#: views.py:65
+msgid "Comment is under moderation"
+msgstr "Комментарий ожидает проверки"
+
+#: views.py:185 templates/lbe/article_detail.html:47
+#: templates/lbe/article_list.html:29
+msgid "Comments"
+msgstr "Комментарии"
+
+#: templates/lbe/404.html:7
+msgid "Not found"
+msgstr "Не найдено"
+
+#: templates/lbe/404.html:8
+msgid "This page does not exist"
+msgstr "Такой страницы не существует"
+
+#: templates/lbe/article_detail.html:27 templates/lbe/article_list.html:25
+#: templates/lbe/comment_tree.html:25
+msgid "Edit"
+msgstr "Изменить"
+
+#: templates/lbe/article_detail.html:31
+msgid "Published"
+msgstr "Опубликовано"
+
+#: templates/lbe/article_detail.html:34 templates/lbe/article_list.html:32
+msgid "Updated"
+msgstr "Обновлено"
+
+#: templates/lbe/article_detail.html:38
+msgid "Category"
+msgstr "Рубрика"
+
+#: templates/lbe/article_list.html:41
+msgid "Previous page"
+msgstr "Предыдущая страница"
+
+#: templates/lbe/article_list.html:57
+msgid "Next page"
+msgstr "Следующая страница"
+
+#: templates/lbe/base.html:39
+msgid "Pages"
+msgstr "Страницы"
+
+#: templates/lbe/base.html:51
+msgid "Categories"
+msgstr "Рубрики"
+
+#: templates/lbe/base.html:63
+msgid "Latest comments"
+msgstr "Свежие комментарии"
+
+#: templates/lbe/base.html:77 templates/lbe/comment_tree.html:16
+msgid "at"
+msgstr "в"
+
+#: templates/lbe/comment_form.html:6
+msgid "Submit"
+msgstr "Отправить"
+
+#: templates/lbe/comment_tree.html:21
+msgid "Reply"
+msgstr "Ответить"
+
+#: templates/lbe/comment_tree.html:22
+msgid "Cancel reply"
+msgstr "Отменить ответ"

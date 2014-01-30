@@ -1,0 +1,32 @@
+{% load i18n %}
+
+{% for c in comment_tree %}
+<div id="comment-{{ c.id }}" class="comment comment-level-{{ c.level }}">
+	<div class="comment-wrapper {{ c.under_moderation_class }}">
+		<div class="comment-header">
+			<img class="comment-header-avatar" src="{{ c.get_user_avatar }}?s=35&amp;d=mm" alt="">
+			<div class="comment-header-author">
+				{% if c.user_url %}
+					<a class="comment-header-author-link" href="{{ c.user_url }}">{{ c.user_name }}</a>:
+				{% else %}
+					<span class="comment-header-author-name">{{ c.user_name }}</span>:
+				{% endif %}
+			</div>
+			<div class="comment-header-anchor">
+				<a class="comment-header-anchor-link" href="#comment-{{ c.id }}">{{ c.created|date:'d E Y' }} {% trans 'at' %} {{ c.created|time:'H:i' }}</a>
+			</div>
+		</div>
+		<div class="comment-content">{{ c.get_content }}</div>
+		{% if c.is_approved %}
+			<a href="{{ c.get_reply_link }}" class="comment-reply-link" data-id="{{ c.id }}">{% trans 'Reply' %}</a>
+			<a href="#" class="comment-reply-cancel-link">{% trans 'Cancel reply' %}</a>
+		{% endif %}
+		{% if user.is_authenticated %}
+			<a class="comment-edit-link" href="{% url 'admin:lbe_comment_change' c.id %}">{% trans 'Edit' %}</a>
+		{% endif %}
+	</div>
+	{% if c.children %}
+		{% include comment_template with comment_tree=c.children %}
+	{% endif %}
+</div>
+{% endfor %}

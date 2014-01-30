@@ -1,0 +1,7 @@
+*~
+*.pyc
+db.*
+production_settings.py
+dev_settings.py
+media/*
+static/*

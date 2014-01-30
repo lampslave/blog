@@ -1,0 +1,73 @@
+{% extends 'lbe/base.html' %}
+
+{% load i18n %}
+
+{% block title %}
+	{% if category %}
+		{{ category.name }} - {{ site_title }}
+	{% else %}
+		{{ site_title }}
+	{% endif %}
+{% endblock %}
+
+{% block alternate %}
+	{% if category %}
+		<link rel="alternate" type="application/rss+xml" title="{{ site_title }} - {{ category.name }}" href="{% url 'lbe:category_rss' category.slug %}">
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+	{% for article in article_list %}
+	<div class="article">
+		<h1 class="article-title">
+			<a class="article-title-link" href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+		</h1>
+		{% with article.get_content as content %}
+			{{ content|truncatewords_html:60 }}
+			{% if content|wordcount > 60 %}
+				<div class="article-readmore">
+					<a class="article-readmore-link" href="{{ article.get_absolute_url }}" title="{{ article.title }}">Полная версия »</a>
+				</div>
+			{% endif %}
+		{% endwith %}
+		<ul class="article-meta-list">
+			{% if user.is_authenticated %}
+				<li class="article-meta-edit">
+					<a class="article-meta-edit-link" href="{% url 'admin:lbe_article_change' article.id %}">{% trans 'Edit' %}</a>
+				</li>
+			{% endif %}
+			<li class="article-meta-comments">
+				<a class="article-meta-comments-link" href="{{ article.get_absolute_url }}#comments">{% trans 'Comments' %}: {{ article.comment__count }}</a>
+			</li>
+			<li class="article-meta-updated">
+				{% trans 'Updated' %}: {{ article.updated|date:'d E Y' }}
+			</li>
+		</ul>
+	</div>
+	{% endfor %}
+	{% if is_paginated %}
+	<ul class="content-pagination-list">
+		{% if page_obj.has_previous %}
+			<li class="content-pagination-item content-pagination-prev">
+				<a class="content-pagination-link" href="?page={{ page_obj.previous_page_number }}">&laquo; {% trans 'Previous page' %}</a>
+			</li>
+		{% endif %}
+		{% for page in paginator.page_range %}
+			{% if page == page_obj.number %}
+				<li class="content-pagination-item">
+					<span class="content-pagination-active">{{ page }}</span>
+				</li>
+			{% else %}
+				<li class="content-pagination-item">
+					<a class="content-pagination-link" href="?page={{ page }}">{{ page }}</a>
+				</li>
+			{% endif %}
+		{% endfor %}
+		{% if page_obj.has_next %}
+			<li class="content-pagination-item content-pagination-next">
+				<a class="content-pagination-link" href="?page={{ page_obj.next_page_number }}">{% trans 'Next page' %} &raquo;</a>
+			</li>
+		{% endif %}
+	</ul>
+	{% endif %}
+{% endblock %}

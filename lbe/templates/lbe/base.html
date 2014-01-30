@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+	{% load i18n %}
+	{% load staticfiles %}
+	<meta charset="utf-8">
+	<title>{% block title %}{{ site_title }}{% endblock %}</title>
+	{% block description %}
+		<meta name="description" content="{{ site_description }}">
+	{% endblock %}
+	<link rel="stylesheet" href="{% static 'style.css' %}">
+	<script src="{% static 'jquery-2.0.3.min.js' %}"></script>
+	<script src="{% static 'lightbox2/lightbox-2.6.min.js' %}"></script>
+	{% block form_media %}
+	{% endblock %}
+	<link rel="alternate" type="application/rss+xml" title="{{ site_title }}" href="{% url 'lbe:rss' %}">
+	{% block alternate %}
+	{% endblock %}
+	<link rel="icon" href="{% static 'favicon.png' %}" sizes="16x16" type="image/png">
+</head>
+<body>
+
+<div class="site-header">
+<div class="site-container">
+	<h1 class="site-header-title">
+		<a class="site-header-title-link" href="/">{{ site_title }}</a>
+	</h1>
+</div>
+</div>
+
+<div class="site-main">
+<div class="site-container">
+	<div class="site-content">
+	{% block content %}
+	{% endblock %}
+	</div>
+
+	<div class="site-sidebar">
+		{% if aside_pages_list %}
+			<div class="widget widget_aside widget-pages">
+				<h1 class="widget-header">{% trans 'Pages' %}</h1>
+				<ul class="widget-data-list">
+					{% for p in aside_pages_list %}
+						<li class="widget-data-item">
+							<a class="widget-data-link" href="{{ p.get_absolute_url }}">{{ p.title }}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
+		{% if aside_category_list %}
+			<div class="widget widget_aside widget-categories">
+				<h1 class="widget-header">{% trans 'Categories' %}</h1>
+				<ul class="widget-data-list">
+					{% for cat in aside_category_list %}
+						<li class="widget-data-item">
+							<a class="widget-data-link" href="{{ cat.get_absolute_url }}" title="{{ cat.description }}">{{ cat.name }}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
+		{% if aside_comment_list %}
+			<div class="widget widget_aside widget-latest-comments">
+				<h1 class="widget-header">{% trans 'Latest comments' %}</h1>
+				{% for c in aside_comment_list %}
+					<div class="comment comment-level-1">
+						<div class="comment-wrapper">
+							<div class="comment-header">
+								<img class="comment-header-avatar" src="{{ c.get_user_avatar }}?s=35&amp;d=mm" alt="">
+								<div class="comment-header-author">
+									{% if c.user_url %}
+										<a class="comment-header-author-link" href="{{ c.user_url }}">{{ c.user_name }}</a>:
+									{% else %}
+										<span class="comment-header-author-name">{{ c.user_name }}</span>:
+									{% endif %}
+								</div>
+								<div class="comment-header-anchor">
+									<a class="comment-header-anchor-link" href="{{ c.get_absolute_url }}">{{ c.created|date:'d E Y' }} {% trans 'at' %} {{ c.created|time:'H:i' }}</a>
+								</div>
+							</div>
+							<div class="comment-content comment-content_aside">
+								<a class="comment-data-link" href="{{ c.get_absolute_url }}">
+								{{ c.get_content|truncatewords_html:24 }}
+								</a>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+</div>
+</div>
+
+<div class="site-footer">
+<div class="site-container">
+	<div class="site-footer-copyright">{{ site_copyright }}</div>
+</div>
+</div>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter19618228 = new Ya.Metrika({id:19618228,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    ut:"noindex"});
+        } catch(e) { }
+    });
+
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/19618228?ut=noindex" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+</body>
+</html>
