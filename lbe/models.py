@@ -136,8 +136,8 @@ class Comment(models.Model):
         if '<a' in self.content and '[url' in self.content:
             raise PermissionDenied()
         # blacklist
+        fields = (self.user_name, self.user_email, self.user_url, self.content)
         spam = SpamSnippet.objects.values_list('snippet')
-        for (s, ) in spam:
-            if any(s in data for data in (self.user_name, self.user_email,
-                                          self.user_url, self.content)):
+        for (snippet, ) in spam:
+            if any(snippet.lower() in field.lower() for field in fields):
                 raise PermissionDenied()
