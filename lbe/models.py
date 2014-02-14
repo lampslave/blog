@@ -9,6 +9,7 @@ from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.utils import timezone
+from urlparse import urlparse
 
 
 class Setting(models.Model):
@@ -132,6 +133,12 @@ class Comment(models.Model):
             raise PermissionDenied()
         if self.user_name.startswith('http://'):
             raise PermissionDenied()
+        # spambots usually write urls with long path
+        path = urlparse(self.user_url).path
+        if len(path) > 10:
+            raise ValidationError({
+                'user_url': [_('Please make shorter this part: ') + path, ]
+            })
         # spambots usually put both <a> and [url] tags into comment
         if '<a' in self.content and '[url' in self.content:
             raise PermissionDenied()

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-05 00:05+0400\n"
+"POT-Creation-Date: 2014-02-14 08:04+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,152 +23,157 @@ msgstr ""
 msgid "for gravatar service only"
 msgstr "для сервиса gravatar"
 
-#: models.py:15
+#: models.py:16
 msgid "setting name"
 msgstr "название"
 
-#: models.py:16
+#: models.py:17
 msgid "setting value"
 msgstr "значение"
 
-#: models.py:17
+#: models.py:18
 msgid "setting description"
 msgstr "описание"
 
-#: models.py:18
+#: models.py:19
 msgid "autoload as template variable"
 msgstr "автозагрузка в шаблон"
 
-#: models.py:21
+#: models.py:22
 msgid "setting"
 msgstr "настройка"
 
-#: models.py:22
+#: models.py:23
 msgid "settings"
 msgstr "настройки"
 
-#: models.py:31
+#: models.py:32
 msgid "Invalid name (a-z and _ only)"
 msgstr "Используйте только латинские буквы и подчёркивание"
 
-#: models.py:35
+#: models.py:36
 msgid "category name"
 msgstr "название"
 
-#: models.py:36
+#: models.py:37
 msgid "category slug"
 msgstr "псевдоним"
 
-#: models.py:37
+#: models.py:38
 msgid "category description"
 msgstr "описание"
 
-#: models.py:40
+#: models.py:41
 msgid "category"
 msgstr "рубрика"
 
-#: models.py:41
+#: models.py:42
 msgid "categories"
 msgstr "рубрики"
 
-#: models.py:51
+#: models.py:52
 msgid "article title"
 msgstr "название"
 
-#: models.py:52
+#: models.py:53
 msgid "article content"
 msgstr "контент"
 
-#: models.py:53
+#: models.py:54
 msgid "article created"
 msgstr "запись создана"
 
-#: models.py:54
+#: models.py:55
 msgid "article updated"
 msgstr "запись обновлена"
 
-#: models.py:55
+#: models.py:56
 msgid "related category"
 msgstr "рубрика"
 
-#: models.py:56
+#: models.py:57
 msgid "article slug"
 msgstr "псевдоним"
 
-#: models.py:57
+#: models.py:58
 msgid "article description"
 msgstr "описание"
 
-#: models.py:58
+#: models.py:59
 msgid "comment allowed"
 msgstr "комментирование разрешено"
 
-#: models.py:59
+#: models.py:60
 msgid "standalone page"
 msgstr "независимая страница"
 
-#: models.py:60
+#: models.py:61
 msgid "article published"
 msgstr "запись опубликована"
 
-#: models.py:64
+#: models.py:65
 msgid "article"
 msgstr "запись"
 
-#: models.py:65
+#: models.py:66
 msgid "articles"
 msgstr "записи"
 
-#: models.py:83
+#: models.py:84
 msgid "snippet"
 msgstr "фрагмент"
 
-#: models.py:86
+#: models.py:87
 msgid "spam snippet"
 msgstr "фрагмент"
 
-#: models.py:87
+#: models.py:88
 msgid "spam snippets"
 msgstr "чёрный список"
 
-#: models.py:91
+#: models.py:95
 msgid "related article"
 msgstr "связанная запись"
 
-#: models.py:92
+#: models.py:96
 msgid "parent comment"
 msgstr "родительский комментарий"
 
-#: models.py:93
+#: models.py:97
 msgid "name"
 msgstr "имя"
 
-#: models.py:95
+#: models.py:99
 msgid "website"
 msgstr "сайт"
 
-#: models.py:96 models.py:101
+#: models.py:100 models.py:105
 msgid "comment"
 msgstr "комментарий"
 
-#: models.py:97
+#: models.py:101
 msgid "comment created"
 msgstr "комментарий создан"
 
-#: models.py:98
+#: models.py:102
 msgid "comment approved"
 msgstr "комментарий одобрен"
 
-#: models.py:102 views.py:182 templates/lbe/article_detail.html:17
+#: models.py:106 views.py:191 templates/lbe/article_detail.html:20
+#: templates/lbe/article_detail.html:53
 msgid "comments"
 msgstr "комментарии"
 
-#: views.py:65
+#: models.py:140
+msgid "Please make shorter this part: "
+msgstr "Пожалуйста, сделайте эту часть короче: "
+
+#: views.py:68
 msgid "Comment is under moderation"
 msgstr "Комментарий ожидает проверки"
 
-#: views.py:185 templates/lbe/article_detail.html:47
-#: templates/lbe/article_list.html:29
+#: views.py:194 templates/lbe/article_detail.html:51
+#: templates/lbe/article_list.html:40
 msgid "Comments"
 msgstr "Комментарии"
 
@@ -180,44 +185,44 @@ msgstr "Не найдено"
 msgid "This page does not exist"
 msgstr "Такой страницы не существует"
 
-#: templates/lbe/article_detail.html:27 templates/lbe/article_list.html:25
+#: templates/lbe/article_detail.html:30 templates/lbe/article_list.html:36
 #: templates/lbe/comment_tree.html:25
 msgid "Edit"
 msgstr "Изменить"
 
-#: templates/lbe/article_detail.html:31
+#: templates/lbe/article_detail.html:34
 msgid "Published"
 msgstr "Опубликовано"
 
-#: templates/lbe/article_detail.html:34 templates/lbe/article_list.html:32
+#: templates/lbe/article_detail.html:37 templates/lbe/article_list.html:43
 msgid "Updated"
 msgstr "Обновлено"
 
-#: templates/lbe/article_detail.html:38
+#: templates/lbe/article_detail.html:41
 msgid "Category"
 msgstr "Рубрика"
 
-#: templates/lbe/article_list.html:41
+#: templates/lbe/article_list.html:52
 msgid "Previous page"
 msgstr "Предыдущая страница"
 
-#: templates/lbe/article_list.html:57
+#: templates/lbe/article_list.html:68
 msgid "Next page"
 msgstr "Следующая страница"
 
-#: templates/lbe/base.html:39
+#: templates/lbe/base.html:41
 msgid "Pages"
 msgstr "Страницы"
 
-#: templates/lbe/base.html:51
+#: templates/lbe/base.html:53
 msgid "Categories"
 msgstr "Рубрики"
 
-#: templates/lbe/base.html:63
+#: templates/lbe/base.html:65
 msgid "Latest comments"
 msgstr "Свежие комментарии"
 
-#: templates/lbe/base.html:77 templates/lbe/comment_tree.html:16
+#: templates/lbe/base.html:79 templates/lbe/comment_tree.html:16
 msgid "at"
 msgstr "в"
 
