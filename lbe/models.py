@@ -133,11 +133,11 @@ class Comment(models.Model):
             raise PermissionDenied()
         if self.user_name.startswith('http://'):
             raise PermissionDenied()
-        # spambots usually write urls with long path
-        path = urlparse(self.user_url).path
-        if len(path) > 10:
+        # spambots usually write urls with long tail
+        url = urlparse(self.user_url)
+        if len(url.path) > 10 or len(url.query) > 10:
             raise ValidationError({
-                'user_url': [_('Please make shorter this part: ') + path, ]
+                'user_url': [_('This address is too long'), ]
             })
         # spambots usually put both <a> and [url] tags into comment
         if '<a' in self.content and '[url' in self.content:
