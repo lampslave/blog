@@ -128,23 +128,29 @@ class Comment(models.Model):
     def clean(self):
         if not self.created:
             self.created = timezone.now()
+
         if not (Article.objects.only('is_comment_allowed')
                 .get(pk=self.article_id).is_comment_allowed):
             raise PermissionDenied()
-        if self.user_name.startswith('http://'):
-            raise PermissionDenied()
-        # spambots usually write urls with long tail
-        url = urlparse(self.user_url)
-        if len(url.path) > 10 or len(url.query) > 10:
-            raise ValidationError({
-                'user_url': [_('This address is too long'), ]
-            })
-        # spambots usually put both <a> and [url] tags into comment
-        if '<a' in self.content and '[url' in self.content:
-            raise PermissionDenied()
-        # blacklist
-        fields = (self.user_name, self.user_email, self.user_url, self.content)
+
         spam = SpamSnippet.objects.values_list('snippet')
+        fields = (self.user_name, self.user_email, self.user_url, self.content)
         for (snippet, ) in spam:
             if any(snippet.lower() in field.lower() for field in fields):
                 raise PermissionDenied()
+
+        if self.user_name.startswith('http://'):
+            raise ValidationError({
+                'user_name': [_('Links are not allowed here'), ]
+            })
+
+        url = urlparse(self.user_url)
+        if len(url.path) > 10 or len(url.query) > 10:
+            raise ValidationError({
+                'user_url': [_('This link is too long'), ]
+            })
+
+        if any(markup in self.content for markup in ('<a href', '[url')):
+            raise ValidationError({
+                'content': [_('Please, use Markdown syntax for links'), ]
+            })

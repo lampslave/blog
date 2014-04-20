@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-14 10:25+0400\n"
+"POT-Creation-Date: 2014-04-20 04:47+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,9 +164,17 @@ msgstr "комментарий одобрен"
 msgid "comments"
 msgstr "комментарии"
 
-#: models.py:140
-msgid "This address is too long"
-msgstr "Адрес слишком длинный"
+#: models.py:144
+msgid "Links are not allowed here"
+msgstr "Ссылки здесь не разрешены"
+
+#: models.py:150
+msgid "This link is too long"
+msgstr "Ссылка слишком длинная"
+
+#: models.py:155
+msgid "Please, use Markdown syntax for links"
+msgstr "Пожалуйста, используйте для ссылок синтаксис Markdown"
 
 #: views.py:68
 msgid "Comment is under moderation"
