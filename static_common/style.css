@@ -99,6 +99,7 @@ pre > samp {
 pre {
 	max-height: 30em;
 	overflow: auto;
+	white-space: pre;
 }
 
 .content-image_center {
