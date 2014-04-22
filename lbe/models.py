@@ -150,7 +150,16 @@ class Comment(models.Model):
                 'user_url': [_('This link is too long'), ]
             })
 
-        if any(markup in self.content for markup in ('<a href', '[url')):
+        if (any(markup in self.content for markup in ('<a href', '[url')) or
+            self.content.startswith('http://')):
             raise ValidationError({
                 'content': [_('Please, use Markdown syntax for links'), ]
             })
+
+        # http://stackoverflow.com/questions/16441633/
+        if any(u'\u4e00' <= c <= u'\u9fff' for c in self.content[:40]):
+                raise ValidationError({
+                   'content': [_('Chinese characters are not allowed here. ' +
+                                 'No discrimination, just spam protection. ' +
+                                 'Sorry about that.'), ]
+                })
