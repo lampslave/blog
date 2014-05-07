@@ -139,7 +139,8 @@ class Comment(models.Model):
             if any(snippet.lower() in field.lower() for field in fields):
                 raise PermissionDenied()
 
-        if self.user_name.startswith('http://'):
+        if (self.user_name.startswith('http://') or
+            self.user_name.endswith(('.com', '.org', '.net'))):
             raise ValidationError({
                 'user_name': [_('Links are not allowed here'), ]
             })
