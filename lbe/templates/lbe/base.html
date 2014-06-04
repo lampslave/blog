@@ -81,7 +81,7 @@
 							</div>
 							<div class="comment-content comment-content_aside">
 								<a class="comment-data-link" href="{{ c.get_absolute_url }}">
-								{{ c.get_content|truncatewords_html:24 }}
+                                <p>{{ c.get_content|striptags|truncatewords:20 }}</p>
 								</a>
 							</div>
 						</div>
