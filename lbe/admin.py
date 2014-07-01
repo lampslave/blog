@@ -2,33 +2,22 @@
 from django.db import models
 from django.contrib import admin
 from pagedown.widgets import AdminPagedownWidget
-from lbe.models import Setting, Category, Article, SpamSnippet, Comment
+from lbe.models import Setting, SpamSnippet, Category, Article, Comment
 
 
-class SettingAdmin(admin.ModelAdmin):
-    pass
-
-admin.site.register(Setting, SettingAdmin)
+admin.site.register(Setting)
+admin.site.register(SpamSnippet)
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    pass
-
-admin.site.register(Category, CategoryAdmin)
+    prepopulated_fields = {'slug': ('name', )}
 
 
 class ArticleAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('title', )}
     formfield_overrides = {
         models.TextField: {'widget': AdminPagedownWidget},
     }
-
-admin.site.register(Article, ArticleAdmin)
-
-
-class SpamSnippetAdmin(admin.ModelAdmin):
-    pass
-
-admin.site.register(SpamSnippet, SpamSnippetAdmin)
 
 
 class CommentAdmin(admin.ModelAdmin):
@@ -36,4 +25,7 @@ class CommentAdmin(admin.ModelAdmin):
         models.TextField: {'widget': AdminPagedownWidget},
     }
 
+
+admin.site.register(Article, ArticleAdmin)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Comment, CommentAdmin)
