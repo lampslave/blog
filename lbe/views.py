@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from urlparse import urlparse
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import CreateView
@@ -12,7 +14,6 @@ from django.contrib.syndication.views import Feed
 from lbe.models import Setting, Category, Article, Comment
 from lbe.forms import CommentForm
 from lbe.utils import make_tree
-from urlparse import urlparse
 
 
 def add_user_session_data(instance, form_initial):
@@ -22,82 +23,81 @@ def add_user_session_data(instance, form_initial):
 
 
 def get_aside_content():
-    data = {}
-    settings = (Setting.objects.filter(autoload=True)
-                .values_list('name', 'value'))
-    for name, value in settings:
-        data[name] = mark_safe(value)
-
-    data['aside_pages_list'] = (Article
-        .objects.filter(is_published=True, is_standalone=True)
-        .order_by('created').only('title', 'slug'))
-
-    data['aside_category_list'] = (Category.objects.annotate(Count('article'))
-                                   .filter(article__count__gt=0))
-
-    comments = (Comment.objects.filter(is_approved=True,
-                                       article__is_published=True)
-                .order_by('-created')[:5])
-    for c in comments:
-        c.get_absolute_url = c.get_absolute_url()  # caching
-    data['aside_comment_list'] = comments
-    return data
+    ctx = {}
+    for setting in Setting.objects.filter(autoload=True).only('name', 'value'):
+        ctx[setting.name] = mark_safe(setting.value)
+    ctx['aside_pages_list'] = (
+        Article.objects
+        .filter(is_published=True, is_standalone=True)
+        .only('title', 'slug').order_by('created')
+    )
+    ctx['aside_category_list'] = (
+        Category.objects.annotate(Count('article'))
+        .filter(article__count__gt=0)
+    )
+    ctx['aside_comment_list'] = (
+        Comment.objects
+        .filter(is_approved=True, article__is_published=True)[:5]
+    )
+    return ctx
 
 
 class AsideMixin(ContextMixin):
     def get_context_data(self, **kwargs):
-        data = super(AsideMixin, self).get_context_data(**kwargs)
-        data.update(get_aside_content())
-        return data
+        ctx = super(AsideMixin, self).get_context_data(**kwargs)
+        ctx.update(get_aside_content())
+        return ctx
 
 
-class ArticleDetail(DetailView, AsideMixin):
+class ArticleDetail(AsideMixin, DetailView):
     model = Article
 
     def get_queryset(self):
-        return (super(ArticleDetail, self)
-                .get_queryset().filter(is_published=True))
+        qs = super(ArticleDetail, self).get_queryset()
+        if not self.request.user.is_superuser:
+            qs = qs.filter(is_published=True)
+        return qs
 
     def get_context_data(self, **kwargs):
-        data = super(ArticleDetail, self).get_context_data(**kwargs)
-        comments = (Comment.objects
-                    .filter(article_id=self.get_object().id).order_by('id'))
-        for c in comments:
-            if not c.is_approved:
-                c.url = ''
-                c.content = _('Comment is under moderation')
-                c.under_moderation_class = 'comment-under-moderation'
-        data['comment_tree'] = make_tree(comments)
-        data['comment_form'] = CommentForm(
-            initial=add_user_session_data(self, {'article': self.object}))
-        return data
+        ctx = super(ArticleDetail, self).get_context_data(**kwargs)
+        comment_list = Comment.objects.filter(article=self.object)
+        for comment in comment_list:
+            if not comment.is_approved:
+                comment.url = ''
+                comment.content = _('Comment is under moderation')
+                comment.under_moderation_class = 'comment-under-moderation'
+        ctx['comment_tree'] = make_tree(comment_list)
+        ctx['comment_form'] = CommentForm(
+            initial=add_user_session_data(self, {'article': self.object})
+        )
+        return ctx
 
 
-class ArticleList(ListView, AsideMixin):
+class ArticleList(AsideMixin, ListView):
     model = Article
     paginate_by = 10
 
     def get_queryset(self):
-        return (super(ArticleList, self)
-                .get_queryset().filter(is_published=True, is_standalone=False)
-                .annotate(Count('comment')))
+        qs = super(ArticleList, self).get_queryset()
+        return qs.annotate(Count('comment')).filter(is_published=True,
+                                                    is_standalone=False)
 
 
-class CategoryList(ArticleList, AsideMixin):
+class CategoryList(ArticleList):
     def get_category(self):
         return get_object_or_404(Category, slug=self.kwargs['slug'])
 
     def get_queryset(self):
-        return (super(CategoryList, self).get_queryset()
-                .filter(category=self.get_category()))
+        qs = super(CategoryList, self).get_queryset()
+        return qs.filter(category=self.get_category())
 
     def get_context_data(self, **kwargs):
-        data = super(CategoryList, self).get_context_data(**kwargs)
-        data['category'] = self.get_category()
-        return data
+        ctx = super(CategoryList, self).get_context_data(**kwargs)
+        ctx['category'] = self.get_category()
+        return ctx
 
 
-class CommentAdd(CreateView, AsideMixin):
+class CommentAdd(AsideMixin, CreateView):
     model = Comment
     form_class = CommentForm
     http_method_names = ['post']
@@ -144,8 +144,8 @@ class RSS(Feed):
         return reverse('lbe:rss')
 
     def items(self):
-        return (Article.objects.filter(is_published=True,
-                                       is_standalone=False)[:10])
+        return Article.objects.filter(is_published=True,
+                                      is_standalone=False)[:10]
 
     def item_title(self, item):
         return item.title
@@ -164,10 +164,10 @@ class CategoryRSS(RSS):
 
     def title(self):
         try:
-            return ''.join([Setting.objects.get(name='site_title').value,
-                            u' » ', self.category.name])
+            title = Setting.objects.get(name='site_title').value
         except ObjectDoesNotExist:
-            return ''
+            title = ''
+        return ''.join([title, ' » ', self.category.name])
 
     def description(self):
         return self.category.description
@@ -176,19 +176,20 @@ class CategoryRSS(RSS):
         return reverse('lbe:category_rss', args=[self.category.slug])
 
     def items(self):
-        return (Article.objects.filter(is_published=True, is_standalone=False,
-                                       category=self.category)[:10])
+        return Article.objects.filter(is_published=True, is_standalone=False,
+                                      category=self.category)[:10]
 
 
 class ArticleCommentsRSS(Feed):
     def __call__(self, request, *args, **kwargs):
-        self.article = get_object_or_404(Article, slug=kwargs['slug'],
-                                         is_published=True)
-        return (super(ArticleCommentsRSS, self)
-                .__call__(request, *args, **kwargs))
+        self.article = get_object_or_404(
+            Article, slug=kwargs['slug'], is_published=True
+        )
+        return super(ArticleCommentsRSS, self).__call__(request,
+                                                        *args, **kwargs)
 
     def title(self):
-        return ''.join([self.article.title, u' » ', _('comments')])
+        return ''.join([self.article.title, ' » ', _('comments')])
 
     def description(self):
         return _('Comments')
@@ -197,9 +198,8 @@ class ArticleCommentsRSS(Feed):
         return reverse('lbe:article_comments_rss', args=[self.article.slug])
 
     def items(self):
-        return (Comment.objects
-                .filter(article=self.article, is_approved=True)
-                .order_by('-created')[:25])
+        return Comment.objects.filter(article=self.article,
+                                      is_approved=True).reverse()[:25]
 
     def item_title(self, item):
         return item.user_name

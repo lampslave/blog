@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.conf.urls import patterns, url
-from lbe.views import (ArticleList, ArticleDetail, CategoryList, CommentAdd,
-CommentReply, RSS, CategoryRSS, ArticleCommentsRSS)
+from lbe.views import ArticleList, ArticleDetail, CategoryList, CommentAdd, \
+    CommentReply, RSS, CategoryRSS, ArticleCommentsRSS
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'blog.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
+urlpatterns = patterns(
+    '',
     url(r'^$', ArticleList.as_view(), name='article_list'),
     url(r'^feed/$', RSS(), name='rss'),
     url(r'^category/(?P<slug>[-_\w]+)/$', CategoryList.as_view(), name='category'),

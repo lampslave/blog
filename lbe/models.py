@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import re
 import hashlib
+from urlparse import urlparse
 from markdown2 import markdown
 from django.db import models
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -9,7 +11,6 @@ from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.utils import timezone
-from urlparse import urlparse
 
 
 class Setting(models.Model):
@@ -23,7 +24,7 @@ class Setting(models.Model):
         verbose_name_plural = _('settings')
 
     def __unicode__(self):
-        return u'{}: {}'.format(self.name, self.description[:50])
+        return '{}: {}'.format(self.name, self.description[:50])
 
     def clean(self):
         self.name = self.name.strip().replace('-', '_')
@@ -45,7 +46,7 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return  reverse('lbe:category', args=[self.slug])
+        return reverse('lbe:category', args=[self.slug])
 
 
 class Article(models.Model):
@@ -102,12 +103,13 @@ class Comment(models.Model):
     is_approved = models.BooleanField(default=False, verbose_name=_('comment approved'))
 
     class Meta():
+        ordering = ['created']
         verbose_name = _('comment')
         verbose_name_plural = _('comments')
 
     def __unicode__(self):
         content = strip_tags(self.get_content())
-        return u'{}: {}...'.format(self.user_name, content[:40].rstrip())
+        return '{}: {}...'.format(self.user_name, content[:40].rstrip())
 
     def get_content(self):
         return mark_safe(markdown(self.content, html4tags=True,
@@ -123,7 +125,7 @@ class Comment(models.Model):
     def get_absolute_url(self):
         article_url = (Article.objects.only('slug').get(pk=self.article_id)
                        .get_absolute_url())
-        return u'{}#comment-{}'.format(article_url, self.pk)
+        return '{}#comment-{}'.format(article_url, self.pk)
 
     def clean(self):
         if not self.created:
@@ -139,8 +141,7 @@ class Comment(models.Model):
             if any(snippet.lower() in field.lower() for field in fields):
                 raise PermissionDenied()
 
-        if (self.user_name.startswith('http://') or
-            self.user_name.endswith(('.com', '.org', '.net'))):
+        if (self.user_name.startswith('http://') or self.user_name.endswith(('.com', '.org', '.net'))):
             raise ValidationError({
                 'user_name': [_('Links are not allowed here'), ]
             })
@@ -151,16 +152,8 @@ class Comment(models.Model):
                 'user_url': [_('This link is too long'), ]
             })
 
-        if (any(markup in self.content for markup in ('<a href', '[url')) or
-            self.content.startswith('http://')):
+        if any(markup in self.content for markup in ('<a href', '[url')) or \
+                self.content.startswith('http://'):
             raise ValidationError({
                 'content': [_('Please, use Markdown syntax for links'), ]
             })
-
-        # http://stackoverflow.com/questions/16441633/
-        if any(u'\u4e00' <= c <= u'\u9fff' for c in self.content[:40]):
-                raise ValidationError({
-                   'content': [_('Chinese characters are not allowed here. ' +
-                                 'No discrimination, just spam protection. ' +
-                                 'Sorry about that.'), ]
-                })

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.forms import ModelForm, widgets as w
 from django.utils.translation import ugettext as _
 from pagedown.widgets import PagedownWidget

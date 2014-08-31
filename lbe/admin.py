@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.db import models
 from django.contrib import admin
 from pagedown.widgets import AdminPagedownWidget
@@ -24,6 +25,7 @@ class CommentAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': AdminPagedownWidget},
     }
+    ordering = ['-created']
 
 
 admin.site.register(Article, ArticleAdmin)
