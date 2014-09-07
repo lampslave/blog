@@ -13,11 +13,20 @@ from django.utils.translation import ugettext as _
 from django.utils import timezone
 
 
+class TemplateSnippetManager(models.Manager):
+    def get_queryset(self):
+        qs = super(TemplateSnippetManager, self).get_queryset()
+        return qs.filter(autoload=True).only('name', 'value')
+
+
 class Setting(models.Model):
     name = models.CharField(unique=True, max_length=255, verbose_name=_('setting name'))
     value = models.CharField(blank=True, max_length=255, verbose_name=_('setting value'))
     description = models.CharField(blank=True, max_length=255, verbose_name=_('setting description'))
     autoload = models.BooleanField(default=True, verbose_name=_('autoload as template variable'))
+
+    objects = models.Manager()
+    template_snippets = TemplateSnippetManager()
 
     class Meta():
         verbose_name = _('setting')
@@ -49,6 +58,18 @@ class Category(models.Model):
         return reverse('lbe:category', args=[self.slug])
 
 
+class RegularArticleManager(models.Manager):
+    def get_queryset(self):
+        qs = super(RegularArticleManager, self).get_queryset()
+        return qs.filter(is_standalone=False, is_published=True)
+
+
+class StandaloneArticleManager(models.Manager):
+    def get_queryset(self):
+        qs = super(StandaloneArticleManager, self).get_queryset()
+        return qs.filter(is_standalone=True, is_published=True)
+
+
 class Article(models.Model):
     title = models.CharField(max_length=255, verbose_name=_('article title'))
     content = models.TextField(verbose_name=_('article content'))
@@ -60,6 +81,10 @@ class Article(models.Model):
     is_comment_allowed = models.BooleanField(default=True, verbose_name=_('comment allowed'))
     is_standalone = models.BooleanField(default=False, verbose_name=_('standalone page'))
     is_published = models.BooleanField(default=False, verbose_name=_('article published'))
+
+    objects = models.Manager()
+    published_regular = RegularArticleManager()
+    published_standalone = StandaloneArticleManager()
 
     class Meta():
         ordering = ['-created']

@@ -2,13 +2,11 @@
 from __future__ import unicode_literals
 from urlparse import urlparse
 from django.views.generic import DetailView, ListView
-from django.views.generic.base import ContextMixin
 from django.views.generic.edit import CreateView
 from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
-from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.contrib.syndication.views import Feed
 from lbe.models import Setting, Category, Article, Comment
@@ -22,34 +20,7 @@ def add_user_session_data(instance, form_initial):
     return form_initial
 
 
-def get_aside_content():
-    ctx = {}
-    for setting in Setting.objects.filter(autoload=True).only('name', 'value'):
-        ctx[setting.name] = mark_safe(setting.value)
-    ctx['aside_pages_list'] = (
-        Article.objects
-        .filter(is_published=True, is_standalone=True)
-        .only('title', 'slug').order_by('created')
-    )
-    ctx['aside_category_list'] = (
-        Category.objects.annotate(Count('article'))
-        .filter(article__count__gt=0)
-    )
-    ctx['aside_comment_list'] = (
-        Comment.objects
-        .filter(is_approved=True, article__is_published=True)[:5]
-    )
-    return ctx
-
-
-class AsideMixin(ContextMixin):
-    def get_context_data(self, **kwargs):
-        ctx = super(AsideMixin, self).get_context_data(**kwargs)
-        ctx.update(get_aside_content())
-        return ctx
-
-
-class ArticleDetail(AsideMixin, DetailView):
+class ArticleDetail(DetailView):
     model = Article
 
     def get_queryset(self):
@@ -73,7 +44,7 @@ class ArticleDetail(AsideMixin, DetailView):
         return ctx
 
 
-class ArticleList(AsideMixin, ListView):
+class ArticleList(ListView):
     model = Article
     paginate_by = 10
 
@@ -97,7 +68,7 @@ class CategoryList(ArticleList):
         return ctx
 
 
-class CommentAdd(AsideMixin, CreateView):
+class CommentAdd(CreateView):
     model = Comment
     form_class = CommentForm
     http_method_names = ['post']
@@ -144,8 +115,7 @@ class RSS(Feed):
         return reverse('lbe:rss')
 
     def items(self):
-        return Article.objects.filter(is_published=True,
-                                      is_standalone=False)[:10]
+        return Article.published_regular[:10]
 
     def item_title(self, item):
         return item.title
@@ -176,8 +146,7 @@ class CategoryRSS(RSS):
         return reverse('lbe:category_rss', args=[self.category.slug])
 
     def items(self):
-        return Article.objects.filter(is_published=True, is_standalone=False,
-                                      category=self.category)[:10]
+        return Article.published_regular.filter(category=self.category)[:10]
 
 
 class ArticleCommentsRSS(Feed):
@@ -212,4 +181,4 @@ class ArticleCommentsRSS(Feed):
 
 
 def e404(request):
-    return render(request, 'lbe/404.html', get_aside_content(), status=404)
+    return render(request, 'lbe/404.html', {}, status=404)

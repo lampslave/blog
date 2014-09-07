@@ -42,8 +42,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.redirects',
+    # 'debug_toolbar',
     'pagedown',
-    'lbe'
+    'lbe',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -54,6 +55,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'blog.urls'
@@ -83,6 +85,22 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+# List of processors used by RequestContext to populate the context.
+# Each one should be a callable that takes the request object as its
+# only parameter and returns a dictionary to add to the context.
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    # 'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
+    'lbe.context_processors.lbe_sidebar',
+)
 
 
 # Static files (CSS, JavaScript, Images)
