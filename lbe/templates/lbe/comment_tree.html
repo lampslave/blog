@@ -13,7 +13,9 @@
 				{% endif %}
 			</div>
 			<div class="comment-header-anchor">
-				<a class="comment-header-anchor-link" href="#comment-{{ c.id }}">{{ c.created|date:'d E Y' }} {% trans 'at' %} {{ c.created|time:'H:i' }}</a>
+				<a class="comment-header-anchor-link" href="{{ c.get_absolute_url }}">
+                    {{ c.created|date:'d E Y' }} {% trans 'at' %} {{ c.created|time:'H:i' }}
+                </a>
 			</div>
 		</div>
 		<div class="comment-content">{{ c.get_content }}</div>

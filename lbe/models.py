@@ -103,6 +103,7 @@ class Article(models.Model):
                                     .replace('\n', ' ').replace('\r', ' '))
 
     def get_absolute_url(self):
+        # this expression also used in Comment.get_absolute_url()
         return reverse('lbe:article', args=[self.slug])
 
 
@@ -145,12 +146,23 @@ class Comment(models.Model):
                         hashlib.md5(self.user_email).hexdigest()])
 
     def get_reply_link(self):
-        return reverse('lbe:comment_reply', args=[self.article_id, self.pk])
+        return reverse('lbe:comment_reply', args=[self.article_id, self.id])
+
+    _article_slug = None
+    _article_url = None
 
     def get_absolute_url(self):
-        article_url = (Article.objects.only('slug').get(pk=self.article_id)
-                       .get_absolute_url())
-        return '{}#comment-{}'.format(article_url, self.pk)
+        # article slug can be fetched in same query with .extra()
+        if self._article_slug is not None:
+            self._article_url = reverse(
+                'lbe:article', args=[self._article_slug]
+            )
+        if self._article_url is None:
+            self._article_url = (
+                Article.objects.only('slug').get(id=self.article_id)
+                .get_absolute_url()
+            )
+        return '{}#comment-{}'.format(self._article_url, self.id)
 
     def clean(self):
         if not self.created:

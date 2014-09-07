@@ -33,6 +33,7 @@ class ArticleDetail(DetailView):
         ctx = super(ArticleDetail, self).get_context_data(**kwargs)
         comment_list = Comment.objects.filter(article=self.object)
         for comment in comment_list:
+            comment._article_url = self.object.get_absolute_url()
             if not comment.is_approved:
                 comment.url = ''
                 comment.content = _('Comment is under moderation')

@@ -24,6 +24,7 @@ def lbe_sidebar(request):
     )
     ctx['aside_comment_list'] = (
         Comment.objects
-        .filter(is_approved=True, article__is_published=True)[:5]
-    )
+        .filter(is_approved=True, article__is_published=True)
+        .extra(select={'_article_slug': 'lbe_article.slug'})
+    )[:5]
     return ctx
