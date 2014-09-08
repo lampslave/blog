@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.redirects',
     # 'debug_toolbar',
+    'loremipsum',
     'pagedown',
     'lbe',
 )

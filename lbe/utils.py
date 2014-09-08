@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import random
+import string
+import loremipsum
 
 
 def make_tree(items):
@@ -29,3 +32,15 @@ def make_flat_tree(items):
             item.path = parent.path + item.path
             item.level = parent.level + 1
     return sorted(items, key=lambda x: x.path)
+
+
+def random_character_sequence(len=0):
+    return ''.join(random.choice(string.ascii_letters) for i in range(len))
+
+
+def random_string(len=0):
+    return loremipsum.sentence(len)
+
+
+def random_text(paragraphs=0):
+    return ''.join([loremipsum.paragraph() for i in range(paragraphs)])

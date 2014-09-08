@@ -168,8 +168,11 @@ class Comment(models.Model):
         if not self.created:
             self.created = timezone.now()
 
-        if not (Article.objects.only('is_comment_allowed')
-                .get(pk=self.article_id).is_comment_allowed):
+        article = (
+            Article.objects.only('is_comment_allowed')
+            .filter(pk=self.article_id).first()
+        )
+        if not getattr(article, 'is_comment_allowed', False):
             raise PermissionDenied()
 
         spam = SpamSnippet.objects.values_list('snippet')
@@ -178,7 +181,8 @@ class Comment(models.Model):
             if any(snippet.lower() in field.lower() for field in fields):
                 raise PermissionDenied()
 
-        if (self.user_name.startswith('http://') or self.user_name.endswith(('.com', '.org', '.net'))):
+        if (self.user_name.startswith('http://') or
+                self.user_name.endswith(('.com', '.org', '.net'))):
             raise ValidationError({
                 'user_name': [_('Links are not allowed here'), ]
             })
