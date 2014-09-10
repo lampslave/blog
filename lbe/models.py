@@ -129,7 +129,7 @@ class Comment(models.Model):
     is_approved = models.BooleanField(default=False, verbose_name=_('comment approved'))
 
     class Meta():
-        ordering = ['created']
+        ordering = ['-created']
         verbose_name = _('comment')
         verbose_name_plural = _('comments')
 

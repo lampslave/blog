@@ -31,7 +31,9 @@ class ArticleDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ArticleDetail, self).get_context_data(**kwargs)
-        comment_list = Comment.objects.filter(article=self.object)
+        comment_list = (
+            Comment.objects.filter(article=self.object).order_by('created')
+        )
         for comment in comment_list:
             comment._article_url = self.object.get_absolute_url()
             if not comment.is_approved:
@@ -168,8 +170,11 @@ class ArticleCommentsRSS(Feed):
         return reverse('lbe:article_comments_rss', args=[self.article.slug])
 
     def items(self):
-        return Comment.objects.filter(article=self.article,
-                                      is_approved=True).reverse()[:25]
+        return (
+            Comment.objects
+            .filter(is_approved=True, article=self.article)
+            .extra(select={'_article_slug': 'lbe_article.slug'})
+        )[:25]
 
     def item_title(self, item):
         return item.user_name

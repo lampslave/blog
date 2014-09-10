@@ -25,7 +25,6 @@ class CommentAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': AdminPagedownWidget},
     }
-    ordering = ['-created']
 
 
 admin.site.register(Article, ArticleAdmin)
