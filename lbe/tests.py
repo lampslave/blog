@@ -3,9 +3,11 @@ from __future__ import unicode_literals
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone as tz
+from django.utils.html import escape
+from django.utils.encoding import force_text
 from lbe.models import Article, Category, Comment
 from lbe.utils import random_string as rs, random_text as rt, \
-    random_character_sequence as rcs
+    random_char_seq as rcs
 
 
 class Test(TestCase):
@@ -25,7 +27,7 @@ class Test(TestCase):
         self.assertIn(str(article.title), response.content)
         self.assertIn(str(article.get_content()), response.content)
 
-    def test_article_list(self):
+    def test_article_list_and_feed(self):
         response = self.client.get(reverse('lbe:article_list'))
         self.assertEqual(response.status_code, 200)
 
@@ -48,11 +50,16 @@ class Test(TestCase):
         response = self.client.get(reverse('lbe:article_list'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(article_pub, response.context['object_list'])
-        self.assertNotIn(article_not_pub, response.context['object_list'])
-        self.assertNotIn(page_pub, response.context['object_list'])
-        self.assertNotIn(page_not_pub, response.context['object_list'])
+        for a in (article_not_pub, page_pub, page_not_pub):
+            self.assertNotIn(a, response.context['object_list'])
 
-    def test_category_list(self):
+        response = self.client.get(reverse('lbe:rss'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(escape(article_pub.get_content()), force_text(response))
+        for a in (article_not_pub, page_pub, page_not_pub):
+            self.assertNotIn(escape(a.get_content()), force_text(response))
+
+    def test_category_list_and_feed(self):
         response = self.client.get(
             reverse('lbe:category', args=[rcs(10)])
         )
@@ -98,6 +105,14 @@ class Test(TestCase):
         for a in (article_not_pub, page_pub, page_not_pub):
             self.assertNotIn(a, response.context['object_list'])
 
+        response = self.client.get(
+            reverse('lbe:category_rss', args=[category.slug])
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(escape(article_pub.get_content()), force_text(response))
+        for a in (article_not_pub, page_pub, page_not_pub):
+            self.assertNotIn(escape(a.get_content()), force_text(response))
+
     def test_comment_add(self):
         data = {
             'user_name': rs(10),
@@ -123,4 +138,35 @@ class Test(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
             Comment.objects.filter(user_name=data['user_name']).exists(), True
+        )
+
+    def test_article_comments_rss(self):
+        article = Article.objects.create(
+            title=rs(20), content=rt(4), created=tz.now(), slug=rcs(10),
+            is_published=True
+        )
+
+        response = self.client.get(
+            reverse('lbe:article_comments_rss', args=[article.slug])
+        )
+        self.assertEqual(response.status_code, 200)
+
+        comment_approved = Comment.objects.create(
+            article=article, user_name=rs(10), content=rt(1), created=tz.now(),
+            is_approved=True
+        )
+        comment_not_approved = Comment.objects.create(
+            article=article, user_name=rs(10), content=rt(1), created=tz.now(),
+            is_approved=False
+        )
+
+        response = self.client.get(
+            reverse('lbe:article_comments_rss', args=[article.slug])
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            escape(comment_approved.get_content()), force_text(response)
+        )
+        self.assertNotIn(
+            escape(comment_not_approved.get_content()), force_text(response)
         )

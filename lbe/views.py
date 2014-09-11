@@ -118,7 +118,7 @@ class RSS(Feed):
         return reverse('lbe:rss')
 
     def items(self):
-        return Article.published_regular[:10]
+        return Article.published_regular.all()[:10]
 
     def item_title(self, item):
         return item.title
@@ -138,9 +138,9 @@ class CategoryRSS(RSS):
     def title(self):
         try:
             title = Setting.objects.get(name='site_title').value
+            return ''.join([title, ' » ', self.category.name])
         except ObjectDoesNotExist:
-            title = ''
-        return ''.join([title, ' » ', self.category.name])
+            return self.category.name
 
     def description(self):
         return self.category.description
@@ -170,11 +170,8 @@ class ArticleCommentsRSS(Feed):
         return reverse('lbe:article_comments_rss', args=[self.article.slug])
 
     def items(self):
-        return (
-            Comment.objects
-            .filter(is_approved=True, article=self.article)
-            .extra(select={'_article_slug': 'lbe_article.slug'})
-        )[:25]
+        qs = Comment.objects.filter(is_approved=True, article=self.article)
+        return qs[:25]
 
     def item_title(self, item):
         return item.user_name

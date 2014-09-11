@@ -15,7 +15,8 @@ def lbe_sidebar(request):
     for snippet in Setting.template_snippets.all():
         ctx[snippet.name] = mark_safe(snippet.value)
     ctx['aside_pages_list'] = (
-        Article.published_standalone.only('title', 'slug').order_by('created')
+        Article.published_standalone.all()
+        .only('title', 'slug').order_by('created')
     )
     ctx['aside_category_list'] = (
         Category.objects

@@ -34,13 +34,14 @@ def make_flat_tree(items):
     return sorted(items, key=lambda x: x.path)
 
 
-def random_character_sequence(len=0):
+def random_char_seq(len=24):
     return ''.join(random.choice(string.ascii_letters) for i in range(len))
 
 
-def random_string(len=0):
-    return loremipsum.sentence(len)
+def random_string(len=24):
+    return random_char_seq(len / 4) + loremipsum.sentence(len - len / 4)
 
 
-def random_text(paragraphs=0):
-    return ''.join([loremipsum.paragraph() for i in range(paragraphs)])
+def random_text(paragraphs=1):
+    token = random_char_seq(24)
+    return token + ''.join([loremipsum.paragraph() for i in range(paragraphs)])
