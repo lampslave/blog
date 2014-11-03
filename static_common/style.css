@@ -1,43 +1,44 @@
-/*! normalize.css v2.1.3 | MIT License | git.io/normalize */
-article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
-audio,canvas,video{display:inline-block}
-audio:not([controls]){display:none;height:0}
-[hidden],template{display:none}
+/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 body{margin:0}
-a{background:0 0}
-a:focus{outline:thin dotted}
+article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}
+audio,canvas,progress,video{display:inline-block;vertical-align:baseline}
+audio:not([controls]){display:none;height:0}
+[hidden],template{display:none}
+a{background-color:transparent}
 a:active,a:hover{outline:0}
-h1{font-size:2em;margin:.67em 0}
 abbr[title]{border-bottom:1px dotted}
 b,strong{font-weight:700}
 dfn{font-style:italic}
-hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+h1{font-size:2em;margin:.67em 0}
 mark{background:#ff0;color:#000}
-code,kbd,pre,samp{font-family:monospace,serif;font-size:1em}
-pre{white-space:pre-wrap}
-q{quotes:"\201C" "\201D" "\2018" "\2019"}
 small{font-size:80%}
 sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
 sup{top:-.5em}
 sub{bottom:-.25em}
 img{border:0}
 svg:not(:root){overflow:hidden}
-figure{margin:0}
+figure{margin:1em 40px}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+pre{overflow:auto}
+code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}
+button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}
+button{overflow:visible}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+input{line-height:normal}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}
+input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
+input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
 fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
 legend{border:0;padding:0}
-button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
-button,input{line-height:normal}
-button,select{text-transform:none}
-button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
-button[disabled],html input[disabled]{cursor:default}
-input[type=checkbox],input[type=radio]{box-sizing:border-box;padding:0}
-input[type=search]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
-input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}
-button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
-textarea{overflow:auto;vertical-align:top}
+textarea{overflow:auto}
+optgroup{font-weight:700}
 table{border-collapse:collapse;border-spacing:0}
-
+td,th{padding:0}
 
 @font-face {
 	font-family: 'font';
@@ -498,13 +499,11 @@ pre {
 }
 
 /* Lightbox2 */
-/* line 7, ../sass/lightbox.sass */
+/* Preload images */
 body:after {
   content: url(lightbox2/img/close.png) url(lightbox2/img/loading.gif) url(lightbox2/img/prev.png) url(lightbox2/img/next.png);
   display: none;
 }
-
-/* line 11, ../sass/lightbox.sass */
 .lightboxOverlay {
   position: absolute;
   top: 0;
@@ -514,8 +513,6 @@ body:after {
   opacity: 0.8;
   display: none;
 }
-
-/* line 20, ../sass/lightbox.sass */
 .lightbox {
   position: absolute;
   left: 0;
@@ -525,22 +522,19 @@ body:after {
   line-height: 0;
   font-weight: normal;
 }
-/* line 28, ../sass/lightbox.sass */
 .lightbox .lb-image {
   display: block;
   height: auto;
+  max-width: inherit;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px;
 }
-/* line 32, ../sass/lightbox.sass */
 .lightbox a img {
   border: none;
 }
-
-/* line 35, ../sass/lightbox.sass */
 .lb-outerContainer {
   position: relative;
   background-color: white;
@@ -553,30 +547,23 @@ body:after {
   -o-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 38, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .lb-outerContainer:after {
   content: "";
   display: table;
   clear: both;
 }
-
-/* line 44, ../sass/lightbox.sass */
 .lb-container {
   padding: 4px;
 }
-
-/* line 47, ../sass/lightbox.sass */
 .lb-loader {
   position: absolute;
   top: 43%;
-  left: 0%;
+  left: 0;
   height: 25%;
   width: 100%;
   text-align: center;
   line-height: 0;
 }
-
-/* line 56, ../sass/lightbox.sass */
 .lb-cancel {
   display: block;
   width: 32px;
@@ -584,8 +571,6 @@ body:after {
   margin: 0 auto;
   background: url(lightbox2/img/loading.gif) no-repeat;
 }
-
-/* line 63, ../sass/lightbox.sass */
 .lb-nav {
   position: absolute;
   top: 0;
@@ -594,47 +579,46 @@ body:after {
   width: 100%;
   z-index: 10;
 }
-
-/* line 71, ../sass/lightbox.sass */
 .lb-container > .nav {
   left: 0;
 }
-
-/* line 74, ../sass/lightbox.sass */
 .lb-nav a {
   outline: none;
+  background-image: url('data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==');
 }
-
-/* line 77, ../sass/lightbox.sass */
 .lb-prev, .lb-next {
-  width: 49%;
   height: 100%;
   cursor: pointer;
-  /* Trick IE into showing hover */
   display: block;
 }
-
-/* line 84, ../sass/lightbox.sass */
-.lb-prev {
+.lb-nav a.lb-prev {
+  width: 34%;
   left: 0;
   float: left;
-}
-/* line 87, ../sass/lightbox.sass */
-.lb-prev:hover {
   background: url(lightbox2/img/prev.png) left 48% no-repeat;
+  opacity: 0;
+  -webkit-transition: opacity 0.6s;
+  -moz-transition: opacity 0.6s;
+  -o-transition: opacity 0.6s;
+  transition: opacity 0.6s;
 }
-
-/* line 90, ../sass/lightbox.sass */
-.lb-next {
+.lb-nav a.lb-prev:hover {
+  opacity: 1;
+}
+.lb-nav a.lb-next {
+  width: 64%;
   right: 0;
   float: right;
-}
-/* line 93, ../sass/lightbox.sass */
-.lb-next:hover {
   background: url(lightbox2/img/next.png) right 48% no-repeat;
+  opacity: 0;
+  -webkit-transition: opacity 0.6s;
+  -moz-transition: opacity 0.6s;
+  -o-transition: opacity 0.6s;
+  transition: opacity 0.6s;
 }
-
-/* line 96, ../sass/lightbox.sass */
+.lb-nav a.lb-next:hover {
+  opacity: 1;
+}
 .lb-dataContainer {
   margin: 0 auto;
   padding-top: 5px;
@@ -646,32 +630,26 @@ body:after {
   -webkit-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
-/* line 38, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .lb-dataContainer:after {
   content: "";
   display: table;
   clear: both;
 }
-
-/* line 103, ../sass/lightbox.sass */
 .lb-data {
   padding: 0 4px;
-  color: #bbbbbb;
+  color: #ccc;
 }
-/* line 106, ../sass/lightbox.sass */
 .lb-data .lb-details {
   width: 85%;
   float: left;
   text-align: left;
   line-height: 1.1em;
 }
-/* line 111, ../sass/lightbox.sass */
 .lb-data .lb-caption {
   font-size: 13px;
   font-weight: bold;
   line-height: 1em;
 }
-/* line 115, ../sass/lightbox.sass */
 .lb-data .lb-number {
   display: block;
   clear: left;
@@ -679,7 +657,6 @@ body:after {
   font-size: 12px;
   color: #999999;
 }
-/* line 121, ../sass/lightbox.sass */
 .lb-data .lb-close {
   display: block;
   float: right;
@@ -689,8 +666,11 @@ body:after {
   text-align: right;
   outline: none;
   opacity: 0.7;
+  -webkit-transition: opacity 0.2s;
+  -moz-transition: opacity 0.2s;
+  -o-transition: opacity 0.2s;
+  transition: opacity 0.2s;
 }
-/* line 130, ../sass/lightbox.sass */
 .lb-data .lb-close:hover {
   cursor: pointer;
   opacity: 1;
