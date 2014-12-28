@@ -1,4 +1,6 @@
-Django>=1.7
+django>=1.7,<1.8
+mysql-python
+pytz
 django-pagedown>=0.0.5
 markdown2>=2.1.0
 py-lorem

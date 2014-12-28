@@ -10,7 +10,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from platform import linux_distribution
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -19,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '12345'
+SECRET_KEY = 'DO NOT FORGET TO CHANGE'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -28,7 +27,7 @@ TEMPLATE_DEBUG = True
 
 SITE_ID = 1
 
-ALLOWED_HOSTS = ['lampslave.ru', 'www.lampslave.ru']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -42,7 +41,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.redirects',
-    # 'debug_toolbar',
     'loremipsum',
     'pagedown',
     'lbe',
@@ -56,7 +54,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'blog.urls'
@@ -114,7 +111,6 @@ STATICFILES_DIRS = (
 )
 
 try:
-    if any(linux_distribution()[0] == d for d in ('debian', )):
-        from production_settings import *
+    from production_settings import *
 except ImportError:
     pass

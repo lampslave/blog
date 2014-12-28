@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.core.urlresolvers import resolve
 from django.db.models import Count
 from django.utils.safestring import mark_safe
 from lbe.models import Setting, Article, Category, Comment
@@ -8,9 +7,6 @@ from lbe.models import Setting, Article, Category, Comment
 
 def lbe_sidebar(request):
     ctx = {}
-
-    if not resolve(request.path).namespace == 'lbe':
-        return ctx
 
     for snippet in Setting.template_snippets.all():
         ctx[snippet.name] = mark_safe(snippet.value)
