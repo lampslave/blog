@@ -1,8 +1,8 @@
 {% load i18n %}
 
 <div class="comment-form-container">
-	<form class="comment-form" method="post" action="{% url 'lbe:comment_add' %}">{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="{% trans 'Submit' %}">
-	</form>
+    <form class="comment-form" method="post" action="{% url 'lbe:comment_add' %}">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="{% trans 'Submit' %}">
+    </form>
 </div>

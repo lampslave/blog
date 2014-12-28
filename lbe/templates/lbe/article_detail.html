@@ -4,64 +4,64 @@
 {% load staticfiles %}
 
 {% block title %}
-	{{ article.title }} - {{ site_title }}
+    {{ article.title }} - {{ site_title }}
 {% endblock %}
 
 {% block description %}
-	<meta name="description" content="{{ article.get_description }}">
+    <meta name="description" content="{{ article.get_description }}">
 {% endblock %}
 
-{% block form_media %}
-	{{ comment_form.media.js }}
-	<script src="{% static 'lbe/comment_reply.js' %}"></script>
+{% block form_js %}
+    {{ comment_form.media.js }}
+    <script src="{% static 'lbe/comment_reply.js' %}"></script>
 {% endblock %}
 
 {% block alternate %}
-	<link rel="alternate" type="application/rss+xml" title="{{ site_title }} - {% trans 'comments' %}" href="{% url 'lbe:article_comments_rss' article.slug %}">
+    <link rel="alternate" type="application/rss+xml" title="{{ site_title }} - {% trans 'comments' %}" href="{% url 'lbe:article_comments_rss' article.slug %}">
 {% endblock %}
 
 {% block content %}
 <div class="article">
-	<h1 class="article-title">{{ article.title }}</h1>
-	{{ article.get_content }}
-	<ul class="article-meta-list">
-		{% if user.is_authenticated %}
-			<li class="article-meta-edit">
-				<a class="article-meta-edit-link" href="{% url 'admin:lbe_article_change' article.id %}">{% trans 'Edit' %}</a>
-			</li>
-		{% endif %}
-		<li class="article-meta-published">
-			{% trans 'Published' %}: {{ article.created|date:'d E Y' }}
-		</li>
-		<li class="article-meta-updated">
-			{% trans 'Updated' %}: {{ article.updated|date:'d E Y' }}
-		</li>
-		{% if article.category %}
-			<li class="article-meta-category">
-				{% trans 'Category' %}:
-				<a class="article-meta-category-link" href="{{ article.category.get_absolute_url }}">{{ article.category.name }}</a>
-			</li>
-		{% endif %}
-	</ul>
+    <h1 class="article-title">{{ article.title }}</h1>
+    {{ article.get_content }}
+    <ul class="article-meta-list">
+        {% if user.is_authenticated %}
+            <li class="article-meta-edit">
+                <a class="article-meta-edit-link" href="{% url 'admin:lbe_article_change' article.id %}">{% trans 'Edit' %}</a>
+            </li>
+        {% endif %}
+        <li class="article-meta-published">
+            {% trans 'Published' %}: {{ article.created|date:'d E Y' }}
+        </li>
+        <li class="article-meta-updated">
+            {% trans 'Updated' %}: {{ article.updated|date:'d E Y' }}
+        </li>
+        {% if article.category %}
+            <li class="article-meta-category">
+                {% trans 'Category' %}:
+                <a class="article-meta-category-link" href="{{ article.category.get_absolute_url }}">{{ article.category.name }}</a>
+            </li>
+        {% endif %}
+    </ul>
 </div>
 
 {% if comment_tree %}
-	<div id="comments" class="comment-tree">
-		<h2 class="comment-tree-header">
-			{% trans 'Comments' %}
-			<span class="comment-tree-header-rss">
-				(<a class="comment-tree-header-rss-link" rel="alternate" type="application/rss+xml" title="{{ site_title }} - {% trans 'comments' %}" href="{% url 'lbe:article_comments_rss' article.slug %}">RSS</a>)
-			</span>
-		</h2>
-		<div class="comment-tree-container">
-			{% with 'lbe/comment_tree.html' as comment_template %}
-				{% include comment_template %}
-			{% endwith %}
-		</div>
-	</div>
+    <div id="comments" class="comment-tree">
+        <h2 class="comment-tree-header">
+            {% trans 'Comments' %}
+            <span class="comment-tree-header-rss">
+                (<a class="comment-tree-header-rss-link" rel="alternate" type="application/rss+xml" title="{{ site_title }} - {% trans 'comments' %}" href="{% url 'lbe:article_comments_rss' article.slug %}">RSS</a>)
+            </span>
+        </h2>
+        <div class="comment-tree-container">
+            {% with 'lbe/comment_tree.html' as comment_template %}
+                {% include comment_template %}
+            {% endwith %}
+        </div>
+    </div>
 {% endif %}
 
 {% if article.is_comment_allowed %}
-	{% include 'lbe/comment_form.html' with form=comment_form %}
+    {% include 'lbe/comment_form.html' with form=comment_form %}
 {% endif %}
 {% endblock %}
