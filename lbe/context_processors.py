@@ -2,14 +2,15 @@
 from __future__ import unicode_literals
 from django.db.models import Count
 from django.utils.safestring import mark_safe
-from lbe.models import Setting, Article, Category, Comment
+from lbe.models import Article, Category, Comment, TemplateSnippet
 
 
 def lbe_sidebar(request):
     ctx = {}
 
-    for snippet in Setting.template_snippets.all():
-        ctx[snippet.name] = mark_safe(snippet.value)
+    for snippet in TemplateSnippet.objects.all():
+        ctx[snippet.name] = mark_safe(snippet.content)
+
     ctx['aside_pages_list'] = (
         Article.published_standalone.all()
         .only('title', 'slug').order_by('created')
@@ -24,4 +25,5 @@ def lbe_sidebar(request):
         .filter(is_approved=True, article__is_published=True)
         .extra(select={'_article_slug': 'lbe_article.slug'})
     )[:5]
+
     return ctx

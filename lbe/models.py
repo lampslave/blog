@@ -13,20 +13,31 @@ from django.utils.translation import ugettext as _
 from django.utils import timezone
 
 
-class TemplateSnippetManager(models.Manager):
-    def get_queryset(self):
-        qs = super(TemplateSnippetManager, self).get_queryset()
-        return qs.filter(autoload=True).only('name', 'value')
+class TemplateSnippet(models.Model):
+    name = models.CharField(_('snippet name'), unique=True, max_length=255)
+    content = models.TextField(_('snippet content'))
+    description = models.CharField(
+        _('snippet description'), blank=True, max_length=255
+    )
+
+    class Meta():
+        verbose_name = _('template snippet')
+        verbose_name_plural = _('template snippets')
+
+    def __unicode__(self):
+        return '{}: {}'.format(self.name, self.description[:50])
+
+    def clean(self):
+        if re.compile('[^a-z_]').search(self.name) is not None:
+            raise ValidationError(_('Invalid name (a-z and _ only)'))
 
 
 class Setting(models.Model):
-    name = models.CharField(unique=True, max_length=255, verbose_name=_('setting name'))
-    value = models.CharField(blank=True, max_length=255, verbose_name=_('setting value'))
-    description = models.CharField(blank=True, max_length=255, verbose_name=_('setting description'))
-    autoload = models.BooleanField(default=True, verbose_name=_('autoload as template variable'))
-
-    objects = models.Manager()
-    template_snippets = TemplateSnippetManager()
+    name = models.CharField(_('setting name'), unique=True, max_length=255)
+    value = models.CharField(_('setting value'), blank=True, max_length=255)
+    description = models.CharField(
+        _('setting description'), blank=True, max_length=255
+    )
 
     class Meta():
         verbose_name = _('setting')
@@ -36,16 +47,16 @@ class Setting(models.Model):
         return '{}: {}'.format(self.name, self.description[:50])
 
     def clean(self):
-        self.name = self.name.strip().replace('-', '_')
-        e = re.compile('[^a-z_]')
-        if e.search(self.name) is not None:
+        if re.compile('[^a-z_]').search(self.name) is not None:
             raise ValidationError(_('Invalid name (a-z and _ only)'))
 
 
 class Category(models.Model):
-    name = models.CharField(unique=True, max_length=255, verbose_name=_('category name'))
-    slug = models.CharField(unique=True, max_length=100, verbose_name=_('category slug'))
-    description = models.CharField(blank=True, max_length=255, verbose_name=_('category description'))
+    name = models.CharField(_('category name'), unique=True, max_length=255)
+    slug = models.CharField(_('category slug'), unique=True, max_length=100)
+    description = models.CharField(
+        _('category description'), blank=True, max_length=255
+    )
 
     class Meta():
         verbose_name = _('category')
@@ -71,16 +82,20 @@ class StandaloneArticleManager(models.Manager):
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=255, verbose_name=_('article title'))
-    content = models.TextField(verbose_name=_('article content'))
-    created = models.DateTimeField(verbose_name=_('article created'))
-    updated = models.DateTimeField(auto_now=True, verbose_name=_('article updated'))
-    category = models.ForeignKey(Category, blank=True, null=True, verbose_name=_('related category'))
-    slug = models.CharField(unique=True, max_length=100, verbose_name=_('article slug'))
-    description = models.CharField(blank=True, max_length=255, verbose_name=_('article description'))
-    is_comment_allowed = models.BooleanField(default=True, verbose_name=_('comment allowed'))
-    is_standalone = models.BooleanField(default=False, verbose_name=_('standalone page'))
-    is_published = models.BooleanField(default=False, verbose_name=_('article published'))
+    title = models.CharField(_('article title'), max_length=255)
+    content = models.TextField(_('article content'))
+    created = models.DateTimeField(_('article created'))
+    updated = models.DateTimeField(_('article updated'), auto_now=True)
+    category = models.ForeignKey(
+        Category, verbose_name=_('related category'), blank=True, null=True
+    )
+    slug = models.CharField(_('article slug'), unique=True, max_length=100)
+    description = models.CharField(
+        _('article description'), blank=True, max_length=255
+    )
+    is_comment_allowed = models.BooleanField(_('comment allowed'), default=True)
+    is_standalone = models.BooleanField(_('standalone page'), default=False)
+    is_published = models.BooleanField(_('article published'), default=False)
 
     objects = models.Manager()
     published_regular = RegularArticleManager()
@@ -108,7 +123,7 @@ class Article(models.Model):
 
 
 class SpamSnippet(models.Model):
-    snippet = models.CharField(unique=True, max_length=255, verbose_name=_('snippet'))
+    snippet = models.CharField(_('snippet'), unique=True, max_length=255)
 
     class Meta():
         verbose_name = _('spam snippet')
@@ -120,13 +135,15 @@ class SpamSnippet(models.Model):
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, verbose_name=_('related article'))
-    parent = models.ForeignKey('self', blank=True, null=True, verbose_name=_('parent comment'))
-    user_name = models.CharField(max_length=50, verbose_name=_('name'))
-    user_email = models.EmailField(blank=True, verbose_name='email')  # FIXME translation is off
-    user_url = models.URLField(blank=True, verbose_name=_('website'))
-    content = models.TextField(verbose_name=_('comment'))
-    created = models.DateTimeField(blank=True, null=False, verbose_name=_('comment created'))
-    is_approved = models.BooleanField(default=False, verbose_name=_('comment approved'))
+    parent = models.ForeignKey(
+        'self', verbose_name=_('parent comment'), blank=True, null=True
+    )
+    user_name = models.CharField(_('name'), max_length=50)
+    user_email = models.EmailField(_('email'), blank=True)
+    user_url = models.URLField(_('website'), blank=True)
+    content = models.TextField(_('comment'))
+    created = models.DateTimeField(_('comment created'), blank=True, null=False)
+    is_approved = models.BooleanField(_('comment approved'), default=False)
 
     class Meta():
         ordering = ['-created']

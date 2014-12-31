@@ -3,9 +3,11 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib import admin
 from pagedown.widgets import AdminPagedownWidget
-from lbe.models import Setting, SpamSnippet, Category, Article, Comment
+from lbe.models import Setting, SpamSnippet, Category, Article, Comment, \
+    TemplateSnippet
 
 
+admin.site.register(TemplateSnippet)
 admin.site.register(Setting)
 admin.site.register(SpamSnippet)
 
