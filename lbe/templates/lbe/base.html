@@ -13,14 +13,13 @@
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="alternate" type="application/rss+xml" title="{{ site_title }}" href="{% url 'lbe:rss' %}">
     {% block alternate %}{% endblock %}
-    <link rel="icon" href="{% static 'favicon.png' %}" sizes="16x16" type="image/png">
 </head>
 <body>
 
 <div class="site-header">
 <div class="site-container">
     <h1 class="site-header-title">
-        <a class="site-header-title-link" href="/">{{ site_title }}</a>
+        <a class="site-header-title-link" href="{% url 'lbe:article_list' %}">{{ site_title }}</a>
     </h1>
 </div>
 </div>
