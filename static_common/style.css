@@ -59,14 +59,14 @@ a:hover {
 }
 
 body {
-    font: 13px/1.3846 "DejaVu Sans", sans-serif; /* 13/18 */
+    font: 13px/1.3846 "DejaVu Sans", Verdana, sans-serif; /* 13/18 */
     color: #2f2f2f;
 }
 p, pre, dl, ol, ul, fieldset, table, address, hr, blockquote {
     margin: 1.3846em 0; /* 18 */
 }
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Liberation Sans", sans-serif;
+    font-family: "Liberation Sans", Arial, sans-serif;
     line-height: 18px;
     margin: 18px 0;
 }
@@ -163,7 +163,7 @@ pre {
     margin-bottom: 50px;
 }
 .article-title {
-    font: normal 28px/36px "Liberation Serif", serif;
+    font: normal 28px/36px "Liberation Serif", "Times New Roman", serif;
     color: #104BA9;
     margin: 27px 0 18px 0; /* bottom: body 13/18 */
 }
@@ -305,7 +305,7 @@ pre {
 .comment-edit-link {
     margin-right: 1em;
     font-size: 12px;
-    font-family: "Liberation Sans", sans-serif;
+    font-family: "Liberation Sans", Arial, sans-serif;
 }
 .comment-under-moderation > .comment-content {
     margin-bottom: 0;
