@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import re
 import hashlib
 from urlparse import urlparse
-from markdown2 import markdown
+import mistune
 from django.db import models
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.urlresolvers import reverse
@@ -110,8 +110,7 @@ class Article(models.Model):
         return self.title
 
     def get_content(self):
-        return mark_safe(markdown(self.content, html4tags=True,
-                                  safe_mode=None))
+        return mark_safe(mistune.markdown(self.content))
 
     def get_description(self):
         return self.description or (strip_tags(self.get_content())[:160]
@@ -155,8 +154,7 @@ class Comment(models.Model):
         return '{}: {}...'.format(self.user_name, content[:40].rstrip())
 
     def get_content(self):
-        return mark_safe(markdown(self.content, html4tags=True,
-                                  safe_mode='escape'))
+        return mark_safe(mistune.markdown(self.content, escape=True))
 
     def get_user_avatar(self):
         return ''.join(["http://www.gravatar.com/avatar/",
