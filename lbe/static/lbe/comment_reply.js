@@ -14,7 +14,7 @@ jQuery(function($) {
         $('.comment-form').remove();
         form.clone().appendTo(comment);
         $('#id_parent').val($(this).data('id'));
-        initPagedown();
+        DjangoPagedown.init();
     });
 
     cancel.click(function(e) {
@@ -24,6 +24,6 @@ jQuery(function($) {
         $(this).hide();
         $('.comment-form').remove();
         form.clone().appendTo('.comment-form-container');
-        initPagedown();
+        DjangoPagedown.init();
     });
 });

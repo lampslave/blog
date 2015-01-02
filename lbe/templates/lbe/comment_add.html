@@ -1,5 +1,9 @@
 {% extends 'lbe/base.html' %}
 
+{% block form_css %}
+    {{ form.media.css }}
+{% endblock %}
+
 {% block form_js %}
     {{ form.media.js }}
 {% endblock %}

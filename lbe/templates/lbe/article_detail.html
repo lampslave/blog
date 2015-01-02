@@ -11,6 +11,10 @@
     <meta name="description" content="{{ article.get_description }}">
 {% endblock %}
 
+{% block form_css %}
+    {{ comment_form.media.css }}
+{% endblock %}
+
 {% block form_js %}
     {{ comment_form.media.js }}
     <script src="{% static 'lbe/comment_reply.js' %}"></script>
