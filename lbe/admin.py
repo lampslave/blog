@@ -17,6 +17,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    list_filter = ('is_published', 'is_standalone', 'is_comment_allowed',)
     prepopulated_fields = {'slug': ('title', )}
     formfield_overrides = {
         models.TextField: {'widget': AdminPagedownWidget},
@@ -24,6 +26,8 @@ class ArticleAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
+    list_display = ('user_name', 'content', 'is_approved',)
+    list_filter = ('is_approved',)
     formfield_overrides = {
         models.TextField: {'widget': AdminPagedownWidget},
     }
