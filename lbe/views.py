@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from urlparse import urlparse
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView
 from django.db.models import Count
@@ -8,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext as _
+from django.utils.six.moves.urllib.parse import urlparse
 from django.contrib.syndication.views import Feed
 from lbe.models import Setting, Category, Article, Comment
 from lbe.forms import CommentForm

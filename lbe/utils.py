@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import unicode_literals, division
 import random
 import string
 import loremipsum
@@ -14,7 +14,7 @@ def make_tree(items):
             tree.append(item)
         else:
             try:
-                [parent] = filter((lambda i: i.id == item.parent_id), items)
+                parent = [p for p in items if p.id == item.parent_id][0]
                 parent.children.append(item)
                 item.level = parent.level + 1
             except ValueError:
@@ -28,7 +28,7 @@ def make_flat_tree(items):
         item.level = 1
         # ORM doesn't allow to use item.parent.path
         if item.parent_id is not None:
-            [parent] = filter((lambda i: i.id == item.parent_id), items)
+            parent = [p for p in items if p.id == item.parent_id][0]
             item.path = parent.path + item.path
             item.level = parent.level + 1
     return sorted(items, key=lambda x: x.path)
@@ -39,7 +39,8 @@ def random_char_seq(len=24):
 
 
 def random_string(len=24):
-    return random_char_seq(len / 4) + loremipsum.sentence(len - len / 4)
+    token_len = int(len / 4)
+    return random_char_seq(token_len) + loremipsum.sentence(len - token_len)
 
 
 def random_text(paragraphs=1):

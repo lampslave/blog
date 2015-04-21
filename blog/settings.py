@@ -119,6 +119,6 @@ STATICFILES_DIRS = (
 )
 
 try:
-    from production_settings import *
+    from .production_settings import *
 except ImportError:
     pass

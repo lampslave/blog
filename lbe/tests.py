@@ -24,8 +24,8 @@ class Test(TestCase):
         response = self.client.get(article.get_absolute_url())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(article, response.context['object'])
-        self.assertIn(str(article.title), response.content)
-        self.assertIn(str(article.get_content()), response.content)
+        self.assertIn(article.title, force_text(response.content))
+        self.assertIn(article.get_content(), force_text(response.content))
 
     def test_article_list_and_feed(self):
         response = self.client.get(reverse('lbe:article_list'))
@@ -50,14 +50,20 @@ class Test(TestCase):
         response = self.client.get(reverse('lbe:article_list'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(article_pub, response.context['object_list'])
-        for a in (article_not_pub, page_pub, page_not_pub):
-            self.assertNotIn(a, response.context['object_list'])
+        for article in (article_not_pub, page_pub, page_not_pub):
+            self.assertNotIn(article, response.context['object_list'])
 
         response = self.client.get(reverse('lbe:rss'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(escape(article_pub.get_content()), force_text(response))
-        for a in (article_not_pub, page_pub, page_not_pub):
-            self.assertNotIn(escape(a.get_content()), force_text(response))
+        self.assertIn(
+            escape(article_pub.get_content()),
+            force_text(response.content)
+        )
+        for article in (article_not_pub, page_pub, page_not_pub):
+            self.assertNotIn(
+                escape(article.get_content()),
+                force_text(response.content)
+            )
 
     def test_category_list_and_feed(self):
         response = self.client.get(
@@ -92,8 +98,8 @@ class Test(TestCase):
             reverse('lbe:category', args=[category.slug])
         )
         self.assertEqual(response.status_code, 200)
-        for a in (article_pub, article_not_pub, page_pub, page_not_pub):
-            self.assertNotIn(a, response.context['object_list'])
+        for article in (article_pub, article_not_pub, page_pub, page_not_pub):
+            self.assertNotIn(article, response.context['object_list'])
 
         Article.objects.all().update(category=category)
 
@@ -102,16 +108,22 @@ class Test(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn(article_pub, response.context['object_list'])
-        for a in (article_not_pub, page_pub, page_not_pub):
-            self.assertNotIn(a, response.context['object_list'])
+        for article in (article_not_pub, page_pub, page_not_pub):
+            self.assertNotIn(article, response.context['object_list'])
 
         response = self.client.get(
             reverse('lbe:category_rss', args=[category.slug])
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn(escape(article_pub.get_content()), force_text(response))
-        for a in (article_not_pub, page_pub, page_not_pub):
-            self.assertNotIn(escape(a.get_content()), force_text(response))
+        self.assertIn(
+            escape(article_pub.get_content()),
+            force_text(response.content)
+        )
+        for article in (article_not_pub, page_pub, page_not_pub):
+            self.assertNotIn(
+                escape(article.get_content()),
+                force_text(response.content)
+            )
 
     def test_comment_add(self):
         data = {
@@ -136,8 +148,8 @@ class Test(TestCase):
 
         response = self.client.post(reverse('lbe:comment_add'), data=data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(
-            Comment.objects.filter(user_name=data['user_name']).exists(), True
+        self.assertTrue(
+            Comment.objects.filter(user_name=data['user_name']).exists()
         )
 
     def test_article_comments_rss(self):
@@ -165,8 +177,10 @@ class Test(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            escape(comment_approved.get_content()), force_text(response)
+            escape(comment_approved.get_content()),
+            force_text(response.content)
         )
         self.assertNotIn(
-            escape(comment_not_approved.get_content()), force_text(response)
+            escape(comment_not_approved.get_content()),
+            force_text(response.content)
         )

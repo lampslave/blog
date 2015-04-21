@@ -2,17 +2,19 @@
 from __future__ import unicode_literals
 import re
 import hashlib
-from urlparse import urlparse
 import mistune
 from django.db import models
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.urlresolvers import reverse
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.utils.six.moves.urllib.parse import urlparse
 from django.utils import timezone
 
 
+@python_2_unicode_compatible
 class TemplateSnippet(models.Model):
     name = models.CharField(_('snippet name'), unique=True, max_length=255)
     content = models.TextField(_('snippet content'))
@@ -24,7 +26,7 @@ class TemplateSnippet(models.Model):
         verbose_name = _('template snippet')
         verbose_name_plural = _('template snippets')
 
-    def __unicode__(self):
+    def __str__(self):
         return '{}: {}'.format(self.name, self.description[:50])
 
     def clean(self):
@@ -32,6 +34,7 @@ class TemplateSnippet(models.Model):
             raise ValidationError(_('Invalid name (a-z and _ only)'))
 
 
+@python_2_unicode_compatible
 class Setting(models.Model):
     name = models.CharField(_('setting name'), unique=True, max_length=255)
     value = models.CharField(_('setting value'), blank=True, max_length=255)
@@ -43,7 +46,7 @@ class Setting(models.Model):
         verbose_name = _('setting')
         verbose_name_plural = _('settings')
 
-    def __unicode__(self):
+    def __str__(self):
         return '{}: {}'.format(self.name, self.description[:50])
 
     def clean(self):
@@ -51,6 +54,7 @@ class Setting(models.Model):
             raise ValidationError(_('Invalid name (a-z and _ only)'))
 
 
+@python_2_unicode_compatible
 class Category(models.Model):
     name = models.CharField(_('category name'), unique=True, max_length=255)
     slug = models.CharField(_('category slug'), unique=True, max_length=100)
@@ -62,7 +66,7 @@ class Category(models.Model):
         verbose_name = _('category')
         verbose_name_plural = _('categories')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -81,6 +85,7 @@ class StandaloneArticleManager(models.Manager):
         return qs.filter(is_standalone=True, is_published=True)
 
 
+@python_2_unicode_compatible
 class Article(models.Model):
     title = models.CharField(_('article title'), max_length=255)
     content = models.TextField(_('article content'))
@@ -106,7 +111,7 @@ class Article(models.Model):
         verbose_name = _('article')
         verbose_name_plural = _('articles')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def get_content(self):
@@ -121,6 +126,7 @@ class Article(models.Model):
         return reverse('lbe:article', args=[self.slug])
 
 
+@python_2_unicode_compatible
 class SpamSnippet(models.Model):
     snippet = models.CharField(_('snippet'), unique=True, max_length=255)
 
@@ -128,10 +134,11 @@ class SpamSnippet(models.Model):
         verbose_name = _('spam snippet')
         verbose_name_plural = _('spam snippets')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.snippet[:30]
 
 
+@python_2_unicode_compatible
 class Comment(models.Model):
     article = models.ForeignKey(Article, verbose_name=_('related article'))
     parent = models.ForeignKey(
@@ -149,7 +156,7 @@ class Comment(models.Model):
         verbose_name = _('comment')
         verbose_name_plural = _('comments')
 
-    def __unicode__(self):
+    def __str__(self):
         content = strip_tags(self.get_content())
         return '{}: {}...'.format(self.user_name, content[:40].rstrip())
 
@@ -157,8 +164,10 @@ class Comment(models.Model):
         return mark_safe(mistune.markdown(self.content, escape=True))
 
     def get_user_avatar(self):
-        return ''.join(["http://www.gravatar.com/avatar/",
-                        hashlib.md5(self.user_email).hexdigest()])
+        return ''.join([
+            "http://www.gravatar.com/avatar/",
+            hashlib.md5(self.user_email.encode('utf-8')).hexdigest()
+        ])
 
     def get_reply_link(self):
         return reverse('lbe:comment_reply', args=[self.article_id, self.id])
