@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 import re
 import hashlib
 import mistune
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters import HtmlFormatter
 from django.db import models
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.urlresolvers import reverse
@@ -12,6 +15,17 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.utils.six.moves.urllib.parse import urlparse
 from django.utils import timezone
+
+
+class PygmentsRenderer(mistune.Renderer):
+    def block_code(self, code, lang=None):
+        code = code.rstrip('\n')
+        if not lang:
+            code = mistune.escape(code, smart_amp=False)
+            return '<pre><code>{0}\n</code></pre>\n'.format(code)
+        lexer = get_lexer_by_name(lang, stripall=True)
+        formatter = HtmlFormatter(cssclass='highlight ' + lang)
+        return highlight(code, lexer, formatter)
 
 
 @python_2_unicode_compatible
@@ -115,7 +129,8 @@ class Article(models.Model):
         return self.title
 
     def get_content(self):
-        return mark_safe(mistune.markdown(self.content))
+        return mark_safe(mistune.markdown(self.content,
+                                          renderer=PygmentsRenderer()))
 
     def get_description(self):
         return self.description or (strip_tags(self.get_content())[:160]
@@ -161,6 +176,7 @@ class Comment(models.Model):
         return '{}: {}...'.format(self.user_name, content[:40].rstrip())
 
     def get_content(self):
+        # don't use PygmentsRenderer here
         return mark_safe(mistune.markdown(self.content, escape=True))
 
     def get_user_avatar(self):

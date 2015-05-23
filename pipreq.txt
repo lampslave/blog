@@ -3,4 +3,5 @@ mysqlclient
 pytz
 django-pagedown==0.1
 mistune
+pygments
 -e git+https://github.com/nubela/py-lorem.git@13bcd5473752f49c243a922de4a72408cc1058a1#egg=py-lorem
