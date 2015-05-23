@@ -5,6 +5,7 @@ from django.contrib import admin
 from pagedown.widgets import AdminPagedownWidget
 from lbe.models import Setting, SpamSnippet, Category, Article, Comment, \
     TemplateSnippet
+from lbe.widgets import AdminCodeMirrorWidget
 
 
 admin.site.register(TemplateSnippet)
@@ -21,7 +22,7 @@ class ArticleAdmin(admin.ModelAdmin):
     list_filter = ('is_published', 'is_standalone', 'is_comment_allowed',)
     prepopulated_fields = {'slug': ('title', )}
     formfield_overrides = {
-        models.TextField: {'widget': AdminPagedownWidget},
+        models.TextField: {'widget': AdminCodeMirrorWidget},
     }
 
 

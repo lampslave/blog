@@ -1,0 +1,8 @@
+.CodeMirror {
+    height: 600px;
+    border: 1px solid #ccc;
+    font: 13px/1.5 monospace;
+}
+.codemirror-widget {
+    font: 13px/1.5 monospace;
+}
