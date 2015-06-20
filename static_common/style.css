@@ -77,6 +77,7 @@ a:hover {
 body {
     font: 13px/1.3846 "DejaVu Sans", Verdana, sans-serif; /* 13/18 */
     color: #2f2f2f;
+    background: #fff;
 }
 p, pre, dl, ol, ul, fieldset, table, address, hr, blockquote {
     margin: 1.3846em 0; /* 18 */
