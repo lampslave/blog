@@ -87,16 +87,12 @@ class Category(models.Model):
         return reverse('lbe:category', args=[self.slug])
 
 
-class RegularArticleManager(models.Manager):
-    def get_queryset(self):
-        qs = super(RegularArticleManager, self).get_queryset()
-        return qs.filter(is_standalone=False, is_published=True)
+class ArticleQuerySet(models.QuerySet):
+    def published_regular(self):
+        return self.filter(is_published=True, is_standalone=False)
 
-
-class StandaloneArticleManager(models.Manager):
-    def get_queryset(self):
-        qs = super(StandaloneArticleManager, self).get_queryset()
-        return qs.filter(is_standalone=True, is_published=True)
+    def published_standalone(self):
+        return self.filter(is_published=True, is_standalone=True)
 
 
 @python_2_unicode_compatible
@@ -116,9 +112,7 @@ class Article(models.Model):
     is_standalone = models.BooleanField(_('standalone page'), default=False)
     is_published = models.BooleanField(_('article published'), default=False)
 
-    objects = models.Manager()
-    published_regular = RegularArticleManager()
-    published_standalone = StandaloneArticleManager()
+    objects = ArticleQuerySet.as_manager()
 
     class Meta():
         ordering = ['-created']

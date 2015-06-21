@@ -11,19 +11,16 @@ def lbe_sidebar(request):
     for snippet in TemplateSnippet.objects.all():
         ctx[snippet.name] = mark_safe(snippet.content)
 
-    ctx['aside_pages_list'] = (
-        Article.published_standalone.all()
-        .only('title', 'slug').order_by('created')
-    )
-    ctx['aside_category_list'] = (
-        Category.objects
-        .filter(article__is_published=True)
-        .annotate(article_count=Count('article')).filter(article_count__gt=0)
-    )
-    ctx['aside_comment_list'] = (
-        Comment.objects
-        .filter(is_approved=True, article__is_published=True)
-        .extra(select={'_article_slug': 'lbe_article.slug'})
-    )[:5]
+    pages = Article.objects.published_standalone()
+    ctx['aside_pages_list'] = pages.only('title', 'slug').order_by('created')
+
+    categories = Category.objects.filter(article__is_published=True)
+    ctx['aside_category_list'] = \
+        categories.annotate(Count('article')).filter(article__count__gt=0)
+
+    commensts = Comment.objects.filter(is_approved=True,
+                                       article__is_published=True)
+    ctx['aside_comment_list'] = \
+        commensts.extra(select={'_article_slug': 'lbe_article.slug'})[:5]
 
     return ctx

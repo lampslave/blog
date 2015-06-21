@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from django.contrib.sites.models import Site
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView
 from django.db.models import Count
@@ -15,7 +16,16 @@ from lbe.utils import make_tree
 
 
 def add_user_session_data(instance, form_initial):
-    data = instance.request.session.get('user_data', {})
+    request = instance.request
+    if request.user.is_authenticated():
+        data = {
+            'user_name': request.user.username,
+            'user_email': request.user.email,
+            'user_url': '{}://{}'.format(request.scheme,
+                                         Site.objects.get_current().domain)
+        }
+    else:
+        data = request.session.get('user_data', {})
     form_initial.update(data)
     return form_initial
 
@@ -78,11 +88,11 @@ class CommentAdd(CreateView):
     template_name = 'lbe/comment_add.html'
 
     def form_valid(self, form):
-        if 'user_data' not in self.request.session:
-            self.request.session['user_data'] = {}
-        for i in form.cleaned_data:
-            if i.startswith('user_'):
-                self.request.session['user_data'][i] = form.cleaned_data[i]
+        if not self.request.user.is_authenticated():
+            self.request.session['user_data'] = {
+                field: form.cleaned_data[field]
+                for field in ['user_name', 'user_email', 'user_url']
+            }
         if self.request.user.is_superuser:
             form.instance.is_approved = True
         return super(CommentAdd, self).form_valid(form)
@@ -118,7 +128,7 @@ class RSS(Feed):
         return reverse('lbe:rss')
 
     def items(self):
-        return Article.published_regular.all()[:10]
+        return Article.objects.published_regular()[:10]
 
     def item_title(self, item):
         return item.title
@@ -149,7 +159,8 @@ class CategoryRSS(RSS):
         return reverse('lbe:category_rss', args=[self.category.slug])
 
     def items(self):
-        return Article.published_regular.filter(category=self.category)[:10]
+        articles = Article.objects.published_regular()
+        return articles.filter(category=self.category)[:10]
 
 
 class ArticleCommentsRSS(Feed):
