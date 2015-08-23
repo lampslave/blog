@@ -301,7 +301,8 @@ body {
     line-height: 0;
     position: relative;
     vertical-align: baseline;
-    top: -0.5em
+    top: -0.5em;
+    color: #F58432;
 }
 .comment-tree-header-rss-link,
 .comment-tree-header-rss-link:visited {
@@ -309,6 +310,7 @@ body {
     text-decoration: none;
 }
 .comment-tree-header-rss-link:hover {
+    color: inherit;
     text-decoration: underline;
 }
 
