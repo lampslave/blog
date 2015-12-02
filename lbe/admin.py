@@ -18,7 +18,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title',)
+    list_display = ('title', 'is_published')
     list_filter = ('is_published', 'is_standalone', 'is_comment_allowed',)
     prepopulated_fields = {'slug': ('title', )}
     formfield_overrides = {

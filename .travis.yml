@@ -1,11 +1,12 @@
 language: python
+sudo: false
 python:
   - "2.7"
-  - "3.3"
   - "3.4"
+  - "3.5"
 env:
-  - DJANGO="Django==1.7" DB=mysql
-  - DJANGO="Django==1.8" DB=mysql
+  - DJANGO="Django>=1.8,<1.9" DB=sqlite
+  - DJANGO="Django>=1.9,<1.10" DB=sqlite
 install:
   - pip install -U $DJANGO
   - pip install -U -r pipreq.txt --exists-action=w

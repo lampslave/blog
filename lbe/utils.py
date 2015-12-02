@@ -2,7 +2,7 @@
 from __future__ import unicode_literals, division
 import random
 import string
-import loremipsum
+from django.utils import lorem_ipsum
 
 
 def make_tree(items):
@@ -40,9 +40,10 @@ def random_char_seq(len=24):
 
 def random_string(len=24):
     token_len = int(len / 4)
-    return random_char_seq(token_len) + loremipsum.sentence(len - token_len)
+    return ' '.join([random_char_seq(token_len),
+                     lorem_ipsum.sentence()[:len - token_len - 1]])
 
 
 def random_text(paragraphs=1):
-    token = random_char_seq(24)
-    return token + ''.join([loremipsum.paragraph() for i in range(paragraphs)])
+    return ''.join([random_char_seq(24), ' '] +
+                   lorem_ipsum.paragraphs(paragraphs))

@@ -17,10 +17,10 @@ class AdminCodeMirrorWidget(Textarea):
               'lbe/codemirror/mode/python/python.js',
               'lbe/codemirror/mode/shell/shell.js',
               'lbe/codemirror/mode/meta.js',
-              'lbe/codemirror-lbe.js',]
+              'lbe/codemirror-lbe.js', ]
         css = {
             'all': ['lbe/codemirror/lib/codemirror.css',
-                    'lbe/codemirror-lbe.css',]
+                    'lbe/codemirror-lbe.css', ]
         }
 
     def __init__(self, attrs=None):
